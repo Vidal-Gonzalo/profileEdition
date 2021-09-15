@@ -48,10 +48,7 @@ export default {
         email: this.email,
         password: this.password,
       }).then((response) => {
-        if (response.data.error) {
-          this.message = response.data.error;
-        } else {
-          this.message = "Logueado";
+        if (response.status == 200) {
           this.$router.push("profile");
         }
       });

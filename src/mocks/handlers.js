@@ -48,26 +48,20 @@ export default [
   rest.post("/api/login", (req, res, ctx) => {
     const { email, password } = req.body;
 
-    if(sessionStorage.length > 0){
-        const obj = JSON.parse(sessionStorage.users);
-        if (email == obj.userEmail && password == obj.userPassword) {
-            sessionStorage.setItem("is-authenticated", "true");
-            return res(ctx.status(200), console.log("Logueado"));
-          } else {
-            return res(
-              ctx.json({
-                error: "E-mail o contraseña incorrectos",
-              })
-            );
-          }
-    } else {
+    if (sessionStorage.length > 0) {
+      const obj = JSON.parse(sessionStorage.users);
+      if (email == obj.userEmail && password == obj.userPassword) {
+        sessionStorage.setItem("is-authenticated", "true");
+        return res(ctx.status(200));
+      } else {
         return res(
-            ctx.json({
-                error: "E-mail o contraseña incorrectos"
-            })
+          ctx.status(401, alert("E-mail o contraseña incorrectos"))
         )
+      }
     }
 
-    
+    return res(
+      ctx.status(401, alert("E-mail o contraseña incorrectos"))
+    );
   }),
 ];
