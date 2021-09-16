@@ -1,7 +1,9 @@
 <template>
+  <particles-bg type="polygon" :bg="true" />
   <div class="signup" id="signup">
     <div class="signupWrap">
       <form v-on:submit.prevent="signup">
+        <h5>¡Regístrate!</h5>
         <label for="">Nombre</label>
         <input
           class="form-control my-3"
@@ -19,7 +21,7 @@
           v-model="newLastName"
         />
         <label for=""> Foto de perfil </label>
-        <br>
+        <br />
         <input
           class="form-control-file my-3"
           type="file"
@@ -27,13 +29,13 @@
           id="picture"
           @change="obtainImage"
         />
-        <br>
-        <div v-if = newImage>
+        <br />
+        <div v-if="newImage">
           <figure>
             <img width="200" height="200" :src="showImage" />
           </figure>
         </div>
-        <br>
+        <br />
 
         <label for="">Email</label>
         <input
@@ -52,9 +54,10 @@
           v-model="newPassword"
         />
 
-       
+        <div class="buttonWrap d-flex justify-content-end">
+          <button class="btn btn-primary" type="submit">Registrarse</button>
+        </div>
 
-        <button class="btn btn-primary" type="submit">Registrarse</button>
         <p>{{ message }}</p>
       </form>
     </div>
@@ -63,9 +66,13 @@
 
 <script>
 import Axios from "axios";
+import { ParticlesBg } from "particles-bg-vue";
 
 export default {
   name: "signup",
+  components: {
+    ParticlesBg,
+  },
   data: function () {
     return {
       newFirstName: "",
@@ -122,17 +129,39 @@ export default {
 
 <style scoped>
 .signup {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
+  height: calc(100vh - 50px);
 }
 .signupWrap {
+  width: 400px;
+  background: #4e4d4d;
+  margin: auto;
+  margin-top: 50px;
   border-radius: 20px;
-  border: 1px solid #ccc;
-  padding: 50px;
-  background-color: rgb(241, 241, 241);
-  box-shadow: 3px 3px 15px #ccc;
+  box-shadow: 7px 13px 37px #000;
+  padding: 20px 30px;
+  color: #fff;
 }
+.signupWrap h5 {
+  text-align: center;
+  height: 40px;
+  border-bottom: 1px solid;
+  font-size: 20px;
+}
+.signupWrap input{
+  border: 1px solid #017bab;
+  margin-bottom: 15px;
+  padding: 11px 10px;
+  background: #252323;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}
+
 </style>
 

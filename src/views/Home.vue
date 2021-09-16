@@ -1,7 +1,9 @@
 <template>
+  <particles-bg type="polygon" :bg="true" />
   <div class="login" id="login">
     <div class="loginWrap">
       <form v-on:submit.prevent="login">
+        <h5>¡Entra a nuestra plataforma!</h5>
         <label for="">Nombre de usuario o e-mail</label>
         <input
           class="form-control my-3"
@@ -18,12 +20,14 @@
           id="password"
           v-model="password"
         />
-        <button class="btn btn-primary" type="submit">Iniciar sesión</button>
-        <br> <br>
+        <div class="buttonWrap d-flex justify-content-end ">
+          <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+        </div>
+
+        <br/>
         <router-link to="/signup"
           >¿Todavía no te registraste? Regístrate aquí</router-link
         >
-        
       </form>
     </div>
   </div>
@@ -32,13 +36,17 @@
 
 <script>
 import Axios from "axios";
+import { ParticlesBg } from "particles-bg-vue";
 
 export default {
   name: "login",
+  components: {
+    ParticlesBg,
+  },
   data: function () {
     return {
       email: "",
-      password: ""
+      password: "",
     };
   },
   methods: {
@@ -66,17 +74,40 @@ export default {
   height: calc(100vh - 50px);
 }
 .loginWrap {
+  width: 400px;
+  background: #4e4d4d;
+  margin: auto;
   border-radius: 20px;
-  border: 1px solid #ccc;
-  padding: 50px;
-  background-color: rgb(241, 241, 241);
-  box-shadow: 3px 3px 15px #ccc;
+  box-shadow: 7px 13px 37px #000;
+  padding: 20px 30px;
+  color: #fff;
 }
+
+.loginWrap h5 {
+  margin: 0;
+  text-align: center;
+  height: 40px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid;
+  font-size: 20px;
+}
+
+.loginWrap input{
+  border: 1px solid #017bab;
+  margin-bottom: 15px;
+  padding: 11px 10px;
+  background: #252323;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}
+
 a {
   text-decoration: none;
-  color: #0a30ad;
+  font-weight: bold;
+  color: #7793ee;
 }
-.errMsg{
+.errMsg {
   margin-top: 30px;
   color: red;
 }
