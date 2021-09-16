@@ -6,7 +6,6 @@ export default [
   //Profile
   rest.get("/api/user", (req, res, ctx) => {
     const isAuthenticated = sessionStorage.getItem("is-authenticated");
-
     if (!isAuthenticated) {
       return res(
         ctx.status(403),
@@ -15,13 +14,14 @@ export default [
         })
       );
     }
-
+    const users = JSON.parse(sessionStorage.getItem("users"));
     return res(
       ctx.status(200),
       ctx.json({
-        username: "admin",
+        users
       })
-    );
+    )
+    
   }),
 
   //Signup
@@ -39,8 +39,8 @@ export default [
     };
 
     sessionStorage.setItem("users", JSON.stringify(users));
-
-    return res(ctx.status(200));
+    sessionStorage.setItem("is-authenticated", "true")
+    return res(ctx.status(201));
   }),
 
   //Login

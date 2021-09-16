@@ -28,7 +28,7 @@
           @change="obtainImage"
         />
         <br>
-        <div v-if= newImage>
+        <div v-if = newImage>
           <figure>
             <img width="200" height="200" :src="showImage" />
           </figure>

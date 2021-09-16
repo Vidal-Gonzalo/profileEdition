@@ -1,31 +1,13 @@
 <template>
- <div id="app">
-    <Navbar/>
-    <router-view/>
+  <div id="app">
+    <router-view />
   </div>
 </template>
 
 <script>
-import Navbar from '@/components/Navbar.vue'
-
-
 export default {
+  name: "app",
 
-  name: 'app',
-  components: {
-    Navbar
-  },
-
-  data() {
-    return {
-      message: '',
-      admin: ''
-    }
-  },
- 
-}
+};
 </script>
 
-<style scoped>
-
-</style>

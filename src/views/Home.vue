@@ -23,7 +23,7 @@
         <router-link to="/signup"
           >¿Todavía no te registraste? Regístrate aquí</router-link
         >
-        <p class="errMsg">{{ message }}</p>
+        
       </form>
     </div>
   </div>
@@ -38,8 +38,7 @@ export default {
   data: function () {
     return {
       email: "",
-      password: "",
-      message: "",
+      password: ""
     };
   },
   methods: {
