@@ -1,10 +1,57 @@
 import { rest } from "msw";
 
-const { uuid } = require('uuidv4')
+import { uuid } from "uuidv4";
 
 export default [
+  //Signup
+
+  rest.post("/api/signup", (req, res, ctx) => {
+    const { firstName, lastName, email, password, image } = req.body;
+
+    const users = {
+      id: uuid(),
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      image: image,
+    };
+    sessionStorage.setItem(`${email}`, JSON.stringify(users));
+    sessionStorage.setItem("is-authenticated", "true");
+    return res(ctx.status(201));
+  }),
+
+  //Login
+
+  rest.post("/api/login", (req, res, ctx) => {
+    const { email, password } = req.body;
+
+    for (let i = 0; i < sessionStorage.length; i++) {
+      //Replace by a helper
+      let registeredEmail = sessionStorage.key(i);
+      if (registeredEmail === email) {
+        let registeredUser = JSON.parse(
+          sessionStorage.getItem(registeredEmail)
+        );
+        if (registeredUser.password === password) {
+          sessionStorage.setItem("is-authenticated", "true");
+          return res(
+            ctx.status(200),
+            ctx.json({
+              registeredEmail,
+            })
+          );
+        } else {
+          return res(ctx.status(401));
+        }
+      }
+    }
+
+    return res(ctx.status(401));
+  }),
+
   //Profile
-  rest.get("/api/user", (req, res, ctx) => {
+  rest.get("/api/user/:email", (req, res, ctx) => {
     const isAuthenticated = sessionStorage.getItem("is-authenticated");
     if (!isAuthenticated) {
       return res(
@@ -14,54 +61,41 @@ export default [
         })
       );
     }
-    const users = JSON.parse(sessionStorage.getItem("users"));
-    return res(
-      ctx.status(200),
-      ctx.json({
-        users
-      })
-    )
-    
-  }),
 
-  //Signup
-
-  rest.post("/api/signup", (req, res, ctx) => {
-    const { newFirstName, newLastName, newEmail, newPassword, newImage } = req.body;
-
-    const users = {
-      userId: uuid(),
-      userName: newFirstName,
-      userEmail: newEmail,
-      userLastName: newLastName,
-      userPassword: newPassword,
-      userImage: newImage
-    };
-
-    sessionStorage.setItem("users", JSON.stringify(users));
-    sessionStorage.setItem("is-authenticated", "true")
-    return res(ctx.status(201));
-  }),
-
-  //Login
-
-  rest.post("/api/login", (req, res, ctx) => {
-    const { email, password } = req.body;
-
-    if (sessionStorage.length > 0) {
-      const obj = JSON.parse(sessionStorage.users);
-      if (email == obj.userEmail && password == obj.userPassword) {
-        sessionStorage.setItem("is-authenticated", "true");
-        return res(ctx.status(200));
-      } else {
+    const { email } = req.params;
+    for (let i = 0; i < sessionStorage.length; i++) {
+      let registeredEmail = sessionStorage.key(i); //Replace by a helper
+      if (registeredEmail === email) {
+        let registeredUser = JSON.parse(
+          sessionStorage.getItem(registeredEmail)
+        );
         return res(
-          ctx.status(401, alert("E-mail o contraseña incorrectos"))
-        )
+          ctx.status(200),
+          ctx.json({
+            registeredUser,
+          })
+        );
       }
+    }
+  }),
+
+  //Update //In process
+  rest.put("/api/user/:email", (req, res, ctx) => {
+    const {firstName, lastName, email, password} = req.body;
+
+    const newUser = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password
+    }
+
+    if(email === email){
+      sessionStorage.setItem(`${newUser.email}`, JSON.stringify(newUser))
     }
 
     return res(
-      ctx.status(401, alert("E-mail o contraseña incorrectos"))
-    );
-  }),
+      ctx.status(200)
+    )
+  })
 ];

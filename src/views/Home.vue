@@ -20,7 +20,7 @@
           id="password"
           v-model="password"
         />
-        <div class="buttonWrap d-flex justify-content-end ">
+        <div class="buttonWrap d-flex justify-content-end">
           <button class="btn btn-primary" type="submit">Iniciar sesión</button>
         </div>
 
@@ -35,7 +35,7 @@
 
 
 <script>
-import Axios from "axios";
+import Axios from 'axios';
 import { ParticlesBg } from "particles-bg-vue";
 
 export default {
@@ -47,19 +47,20 @@ export default {
     return {
       email: "",
       password: "",
+      registeredUser: ""
     };
   },
   methods: {
-    login() {
+    login(){
       Axios.post("/api/login", {
         email: this.email,
-        password: this.password,
+        password: this.password
       }).then((response) => {
-        if (response.status == 200) {
-          this.$router.push("profile");
+        if(response.status == 200){
+          this.$router.push("/profile/" + this.email)
         }
-      });
-    }, //g118n
+      })
+    }
   },
 };
 </script>

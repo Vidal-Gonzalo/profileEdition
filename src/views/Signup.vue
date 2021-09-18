@@ -9,16 +9,16 @@
           class="form-control my-3"
           type="text"
           name=""
-          id="newFirstName"
-          v-model="newFirstName"
+          id="firstName"
+          v-model="firstName"
         />
         <label for="">Apellido</label>
         <input
           class="form-control my-3"
           type="text"
           name=""
-          id="newLastName"
-          v-model="newLastName"
+          id="lastName"
+          v-model="lastName"
         />
         <label for=""> Foto de perfil </label>
         <br />
@@ -30,7 +30,7 @@
           @change="obtainImage"
         />
         <br />
-        <div v-if="newImage">
+        <div v-if="image">
           <figure>
             <img width="200" height="200" :src="showImage" />
           </figure>
@@ -42,16 +42,16 @@
           class="form-control my-3"
           type="text"
           name=""
-          id="newEmail"
-          v-model="newEmail"
+          id="email"
+          v-model="email"
         />
         <label for="">Contraseña</label>
         <input
           class="form-control my-3"
           type="password"
           name=""
-          id="newPassword"
-          v-model="newPassword"
+          id="password"
+          v-model="password"
         />
 
         <div class="buttonWrap d-flex justify-content-end">
@@ -75,11 +75,11 @@ export default {
   },
   data: function () {
     return {
-      newFirstName: "",
-      newPassword: "",
-      newLastName: "",
-      newEmail: "",
-      newImage: null,
+      firstName: "",
+      password: "",
+      lastName: "",
+      email: "",
+      image: null,
       showImage: "",
       message: "",
     };
@@ -87,7 +87,7 @@ export default {
   methods: {
     obtainImage(e) {
       let file = e.target.files[0];
-      this.newImage = file;
+      this.image = file;
       this.loadImage(file);
     },
 
@@ -102,24 +102,24 @@ export default {
     },
 
     signup() {
-      Axios.post("/api/signup", {
-        newFirstName: this.newFirstName,
-        newPassword: this.newPassword,
-        newLastName: this.newLastName,
-        newEmail: this.newEmail,
-        newImage: this.showImage,
+      Axios.post("/api/signup/", {
+        firstName: this.firstName,
+        password: this.password,
+        lastName: this.lastName,
+        email: this.email,
+        image: this.showImage,
       }).then((response) => {
         if (response.data.error) {
-          this.message = response.data.error;
+          alert(response.data.error)
         } else {
-          this.$router.push("profile");
+          this.$router.push("/profile/" + this.email)
         }
       });
     }, //g118n
   },
   computed: {
     img() {
-      return this.newImage;
+      return this.image;
     },
   },
 };

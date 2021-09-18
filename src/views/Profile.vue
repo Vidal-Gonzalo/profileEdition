@@ -2,9 +2,7 @@
   <nav id="nav" class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <h3>Challenge</h3>
-      <div v-if="isAuthorized">
-        <button @click="logout" class="btn btn-danger">Salir</button>
-      </div>
+      <button @click="logout" class="btn btn-danger">Salir</button>
     </div>
   </nav>
   <section id="profile">
@@ -14,9 +12,9 @@
           <div class="col-12">
             <div v-if="!edit">
               <h3>Nombre y apellido:</h3>
-              <p>{{ item.userName }} {{ item.userLastName }}</p>
+              <p>{{ item.firstName }} {{ item.lastName }}</p>
               <h3>E-mail:</h3>
-              <p>{{ item.userEmail }}</p>
+              <p>{{ item.email }}</p>
               <div class="buttonWrap">
                 <button @click="edit = !edit" class="btn btn-primary">
                   Editar
@@ -24,7 +22,7 @@
               </div>
             </div>
             <div v-else>
-              <form>
+              <form v-on:submit.prevent="editProfile">
                 <label>Nombre</label>
                 <input
                   class="form-control my-3"
@@ -32,6 +30,7 @@
                   name="name"
                   id="editName"
                   v-model="editName"
+                  
                 />
                 <label>Apellido</label>
                 <input
@@ -85,37 +84,46 @@ export default {
   name: "profile",
   data() {
     return {
+      authorized: false,
       user: "",
       userImage: "",
-      errMsg: "",
       edit: false,
       editName: "",
       editLastName: "",
       editPassword: "",
-      editEmail: "",
-      isAuthorized: false,
+      editEmail: ""
     };
   },
   methods: {
     logout() {
-      this.isAuthorized = !this.isAuthorized;
       sessionStorage.removeItem("is-authenticated");
       this.$router.push("/");
     },
-  },
-  mounted() {
-    Axios.get("/api/user").then((response) => {
-      if (response.errorMessage) {
-        this.errMsg = response.errorMessage;
-      } else {
-        this.user = response.data;
-      }
-    });
-    const isAuthenticated = sessionStorage.getItem("is-authenticated");
-    if (isAuthenticated) {
-      this.isAuthorized = !this.isAuthorized;
+    editProfile(){
+      Axios.put("/api/user/" + this.email, {
+        firstName: this.editName,
+        lastName: this.editLastName,
+        password: this.editPassword,
+        email: this.editEmail
+      }).then((response) => {
+        if(response.data.error){
+          alert(response.data.error)
+        }else{
+          console.log(this.user)
+        }
+      })
     }
   },
+  mounted(){
+    this.email = this.$route.params.email;
+    Axios.get("/api/user/" + this.email).then((response) => {
+      if(response.data.error){
+        alert(response.data.error)
+      }else{
+        this.user = response.data
+      }
+    })
+  }
 };
 </script>
 
@@ -126,14 +134,14 @@ export default {
   background-color: #3b7dfa;
 }
 
-#nav h3{
+#nav h3 {
   font-size: 30px;
   font-weight: bold;
   color: #fff;
   text-decoration: none;
 }
 
-#nav button{
+#nav button {
   width: 60px;
   height: 40px;
   text-align: center;
