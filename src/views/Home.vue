@@ -23,7 +23,7 @@
         <div class="buttonWrap d-flex justify-content-end">
           <button class="btn btn-primary" type="submit">Iniciar sesión</button>
         </div>
-
+        
         <br/>
         <router-link to="/signup"
           >¿Todavía no te registraste? Regístrate aquí</router-link
@@ -56,7 +56,7 @@ export default {
         email: this.email,
         password: this.password
       }).then((response) => {
-        if(response.status == 200){
+        if(response.status === 200){
           this.$router.push("/profile/" + this.email)
         }
       })

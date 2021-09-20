@@ -96,8 +96,9 @@ export default [
       let registeredEmail = sessionStorage.key(i);
       
       if(registeredEmail === email){
-        sessionStorage.setItem(registeredEmail, JSON.stringify(newUser));
-        return res(ctx.status(200));
+        sessionStorage.removeItem(registeredEmail);
+        sessionStorage.setItem(newEmail, JSON.stringify(newUser));
+        return res(ctx.status(201));
       }
     }
 

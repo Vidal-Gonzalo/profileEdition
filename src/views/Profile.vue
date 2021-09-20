@@ -30,7 +30,6 @@
                   name="name"
                   id="editName"
                   v-model="editName"
-                  
                 />
                 <label>Apellido</label>
                 <input
@@ -82,6 +81,7 @@ import Axios from "axios";
 
 export default {
   name: "profile",
+
   data() {
     return {
       user: "",
@@ -90,7 +90,7 @@ export default {
       editName: "",
       editLastName: "",
       editPassword: "",
-      editEmail: ""
+      editEmail: "",
     };
   },
   methods: {
@@ -98,29 +98,29 @@ export default {
       sessionStorage.removeItem("is-authenticated");
       this.$router.push("/");
     },
-    editProfile(){
+    editProfile() {
       Axios.put("/api/user/" + this.email, {
         firstName: this.editName,
         lastName: this.editLastName,
         password: this.editPassword,
-        newEmail: this.editEmail
+        newEmail: this.editEmail,
       }).then((response) => {
-        if(response.data.error){
-          alert(response.data.error)
+        if (!response.data.error) {
+          this.logout()
         }
-      })
-    }
+      });
+    },
   },
-  mounted(){
+  created() {
     this.email = this.$route.params.email;
     Axios.get("/api/user/" + this.email).then((response) => {
-      if(response.data.error){
-        alert(response.data.error)
-      }else{
-        this.user = response.data
+      if (response.data.error) {
+        alert(response.data.error);
+      } else {
+        this.user = response.data;
       }
-    })
-  }
+    });
+  },
 };
 </script>
 
