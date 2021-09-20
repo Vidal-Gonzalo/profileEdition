@@ -84,7 +84,6 @@ export default {
   name: "profile",
   data() {
     return {
-      authorized: false,
       user: "",
       userImage: "",
       edit: false,
@@ -104,12 +103,10 @@ export default {
         firstName: this.editName,
         lastName: this.editLastName,
         password: this.editPassword,
-        email: this.editEmail
+        newEmail: this.editEmail
       }).then((response) => {
         if(response.data.error){
           alert(response.data.error)
-        }else{
-          console.log(this.user)
         }
       })
     }

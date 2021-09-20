@@ -79,23 +79,28 @@ export default [
     }
   }),
 
-  //Update //In process
+  //Update 
   rest.put("/api/user/:email", (req, res, ctx) => {
-    const {firstName, lastName, email, password} = req.body;
+    const { firstName, lastName, newEmail, password } = req.body;
 
     const newUser = {
+      id: uuid(),
       firstName: firstName,
       lastName: lastName,
-      email: email,
+      email: newEmail,
       password: password
     }
 
-    if(email === email){
-      sessionStorage.setItem(`${newUser.email}`, JSON.stringify(newUser))
+    const { email } = req.params;
+    for (let i = 0; i < sessionStorage.length; i++) {
+      let registeredEmail = sessionStorage.key(i);
+      
+      if(registeredEmail === email){
+        sessionStorage.setItem(registeredEmail, JSON.stringify(newUser));
+        return res(ctx.status(200));
+      }
     }
 
-    return res(
-      ctx.status(200)
-    )
-  })
+    return res(ctx.status(401));
+  }),
 ];
