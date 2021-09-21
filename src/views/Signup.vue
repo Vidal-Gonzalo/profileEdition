@@ -2,26 +2,21 @@
   <particles-bg type="polygon" :bg="true" />
   <div class="signup" id="signup">
     <div class="signupWrap">
-      <form v-on:submit.prevent="signup">
-        <h5>¡Regístrate!</h5>
-        <label for="">Nombre</label>
-        <input
-          class="form-control my-3"
-          type="text"
-          name=""
-          id="firstName"
-          v-model="firstName"
-        />
-        <label for="">Apellido</label>
-        <input
-          class="form-control my-3"
-          type="text"
-          name=""
-          id="lastName"
-          v-model="lastName"
-        />
-        <label for=""> Foto de perfil </label>
-        <br />
+      <Form @submit="signup" :validation-schema="schema">
+        <h5> ¡Regístrate aquí! </h5>
+        
+        <label class="mt-3" for="username">Nombre y apellido</label>
+        <Field id="username" class="form-control my-3" name="username" type="username"/>
+        <div class="err mb-3">
+        <ErrorMessage class="errMsg" name="username" />
+        </div>
+
+        <label for="email">Email</label>
+        <Field id="email" name="email" class="form-control my-3" type="email"/>
+        <ErrorMessage class="errMsg" name="email" />
+
+        <label for="profilePic">Foto de perfil</label>
+        <br>
         <input
           class="form-control-file my-3"
           type="file"
@@ -29,37 +24,20 @@
           id="picture"
           @change="obtainImage"
         />
-        <br />
         <div v-if="image">
           <figure>
             <img width="200" height="200" :src="showImage" />
           </figure>
         </div>
-        <br />
+        <br/>
+        <label for="password">Contraseña</label>
+        <Field id="password" name="password" class="form-control my-3" type="password" />
+        <ErrorMessage class="errMsg" name="password" />
 
-        <label for="">Email</label>
-        <input
-          class="form-control my-3"
-          type="text"
-          name=""
-          id="email"
-          v-model="email"
-        />
-        <label for="">Contraseña</label>
-        <input
-          class="form-control my-3"
-          type="password"
-          name=""
-          id="password"
-          v-model="password"
-        />
-
-        <div class="buttonWrap d-flex justify-content-end">
+        <div class="buttonWrap mt-3 d-flex justify-content-end">
           <button class="btn btn-primary" type="submit">Registrarse</button>
         </div>
-
-        <p>{{ message }}</p>
-      </form>
+      </Form>
     </div>
   </div>
 </template>
@@ -67,21 +45,34 @@
 <script>
 import Axios from "axios";
 import { ParticlesBg } from "particles-bg-vue";
+import { Field, Form, ErrorMessage } from "vee-validate";
+import * as Yup from "yup";
 
 export default {
   name: "signup",
   components: {
     ParticlesBg,
+    Field,
+    Form,
+    ErrorMessage,
   },
+  setup() {
+    const schema = Yup.object().shape({
+      username: Yup.string().min(5).required().label("Username"),
+      email: Yup.string().email().required().label("Email Address"),
+      password: Yup.string().min(5).required().label("Your Password"),
+    });
+
+    return { schema };
+  },
+
   data: function () {
     return {
-      firstName: "",
+      username: "",
       password: "",
-      lastName: "",
       email: "",
       image: null,
       showImage: "",
-      message: "",
     };
   },
   methods: {
@@ -101,18 +92,17 @@ export default {
       reader.readAsDataURL(file);
     },
 
-    signup() {
+    signup(values) {
       Axios.post("/api/signup/", {
-        firstName: this.firstName,
-        password: this.password,
-        lastName: this.lastName,
-        email: this.email,
+        username: values.username,
+        password: values.password,
+        email: values.email,
         image: this.showImage,
       }).then((response) => {
         if (response.data.error) {
-          alert(response.data.error)
+          alert(response.data.error);
         } else {
-          this.$router.push("/profile/" + this.email)
+          this.$router.push("/profile/" + values.email);
         }
       });
     }, //g118n
@@ -138,7 +128,6 @@ export default {
   height: calc(100vh - 50px);
 }
 .signupWrap {
-  width: 400px;
   background: #4e4d4d;
   margin: auto;
   margin-top: 50px;
@@ -153,7 +142,7 @@ export default {
   border-bottom: 1px solid;
   font-size: 20px;
 }
-.signupWrap input{
+.signupWrap input {
   border: 1px solid #017bab;
   margin-bottom: 15px;
   padding: 11px 10px;
@@ -162,6 +151,9 @@ export default {
   font-weight: bold;
   color: #fff;
 }
-
+.errMsg {
+  color: red;
+  padding-bottom: 10px;
+}
 </style>
 

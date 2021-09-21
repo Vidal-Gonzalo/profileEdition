@@ -11,6 +11,7 @@
           name="email"
           id="email"
           v-model="email"
+          required
         />
         <label for="">Contraseña</label>
         <input
@@ -19,12 +20,14 @@
           name="password"
           id="password"
           v-model="password"
+          required
         />
+
+        <p class="errMsg">{{ err_msg }}</p>
         <div class="buttonWrap d-flex justify-content-end">
           <button class="btn btn-primary" type="submit">Iniciar sesión</button>
         </div>
-        
-        <br/>
+        <br />
         <router-link to="/signup"
           >¿Todavía no te registraste? Regístrate aquí</router-link
         >
@@ -35,7 +38,7 @@
 
 
 <script>
-import Axios from 'axios';
+import Axios from "axios";
 import { ParticlesBg } from "particles-bg-vue";
 
 export default {
@@ -45,22 +48,26 @@ export default {
   },
   data: function () {
     return {
+      translate: "",
       email: "",
       password: "",
-      registeredUser: ""
+      err_msg: "",
+      message: "",
     };
   },
   methods: {
-    login(){
+    login() {
       Axios.post("/api/login", {
         email: this.email,
-        password: this.password
+        password: this.password,
       }).then((response) => {
-        if(response.status === 200){
-          this.$router.push("/profile/" + this.email)
+        if (response.data.errMsg) {
+          this.err_msg = response.data.errMsg;
+        } else {
+          this.$router.push("/profile/" + this.email);
         }
-      })
-    }
+      });
+    },
   },
 };
 </script>
@@ -72,7 +79,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 50px);
+  height: 100vh;
 }
 .loginWrap {
   width: 400px;
@@ -93,7 +100,7 @@ export default {
   font-size: 20px;
 }
 
-.loginWrap input{
+.loginWrap input {
   border: 1px solid #017bab;
   margin-bottom: 15px;
   padding: 11px 10px;
@@ -107,10 +114,12 @@ a {
   text-decoration: none;
   font-weight: bold;
   color: #7793ee;
+  font-size: 14px;
 }
+
 .errMsg {
-  margin-top: 30px;
-  color: red;
+  color: rgb(235, 54, 54);
+  font-weight: bold;
 }
 </style>
 

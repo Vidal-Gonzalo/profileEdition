@@ -18,8 +18,10 @@
     "stylus": "^0.54.8",
     "stylus-loader": "^3.0.2",
     "uuidv4": "^6.2.12",
+    "vee-validate": "^4.4.11",
     "vue": "^3.2.11",
-    "vue-router": "^4.0.0-0"
+    "vue-router": "^4.0.0-0",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
