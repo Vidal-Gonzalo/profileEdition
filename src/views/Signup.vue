@@ -3,20 +3,26 @@
   <div class="signup" id="signup">
     <div class="signupWrap">
       <Form @submit="signup" :validation-schema="schema">
-        <h5> ¡Regístrate aquí! </h5>
-        
+        <h5>¡Regístrate aquí!</h5>
+
         <label class="mt-3" for="username">Nombre y apellido</label>
-        <Field id="username" class="form-control my-3" name="username" type="username"/>
+        <Field
+          id="username"
+          class="form-control my-3"
+          name="username"
+          type="username"
+        />
         <div class="err mb-3">
-        <ErrorMessage class="errMsg" name="username" />
+          <ErrorMessage class="errMsg" name="username" />
         </div>
 
         <label for="email">Email</label>
-        <Field id="email" name="email" class="form-control my-3" type="email"/>
+        <Field id="email" name="email" class="form-control my-3" type="email" />
         <ErrorMessage class="errMsg" name="email" />
 
+        <br />
         <label for="profilePic">Foto de perfil</label>
-        <br>
+        <br />
         <input
           class="form-control-file my-3"
           type="file"
@@ -29,9 +35,14 @@
             <img width="200" height="200" :src="showImage" />
           </figure>
         </div>
-        <br/>
+        <br />
         <label for="password">Contraseña</label>
-        <Field id="password" name="password" class="form-control my-3" type="password" />
+        <Field
+          id="password"
+          name="password"
+          class="form-control my-3"
+          type="password"
+        />
         <ErrorMessage class="errMsg" name="password" />
 
         <div class="buttonWrap mt-3 d-flex justify-content-end">
@@ -73,6 +84,7 @@ export default {
       email: "",
       image: null,
       showImage: "",
+      button: false,
     };
   },
   methods: {

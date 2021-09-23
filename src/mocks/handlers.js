@@ -16,47 +16,66 @@ export default [
       image: image,
     };
     sessionStorage.setItem(`${email}`, JSON.stringify(users));
-    return res(ctx.status(201), ctx.json({
-      email
-    }));
+    let sessionId = uuid();
+    sessionStorage.setItem("sessions-" + sessionId, email);
+    
+    return res(
+      ctx.status(201),
+      ctx.cookie("sessionId", sessionId),
+      ctx.json({
+        email,
+      })
+    );
   }),
 
   //Login
-
   rest.post("/api/login", (req, res, ctx) => {
-    const { email, password} = req.body;
+    const { email, password } = req.body;
 
-      let loginUser = JSON.parse(sessionStorage.getItem(email));
-      if(loginUser != null){
-        if(loginUser.password === password){
-          return res(
-            ctx.status(200)
-          )
-        }
-      }
+    let loginUser = JSON.parse(sessionStorage.getItem(email));
+    if (loginUser != null && loginUser.password === password) {
+      let sessionId = uuid();
+      sessionStorage.setItem("sessions-" + sessionId, email);
+      return res(ctx.status(200), ctx.cookie("sessionId", sessionId));
+    }
+    return res(ctx.status(401));
+  }),
 
-      return res(ctx.json({
-        errMsg: "E-mail y/o contraseña incorrectos"
-      }))
+  //Logout
+  rest.post("/api/logout", (req, res, ctx) => {
+    const { sessionId } = req.cookies;
+
+    let session = sessionStorage.getItem("sessions-" + sessionId);
+
+    if (session) {
+      sessionStorage.setItem("sessions-" + sessionId, "");
+      return res(ctx.status(200));
+    }
+
+    return res(ctx.status(401));
   }),
 
   //Profile
   rest.get("/api/user/:email", (req, res, ctx) => {
-
     const { email } = req.params;
+    const { sessionId } = req.cookies;
 
-    let loggedUser = JSON.parse(sessionStorage.getItem(email));
-    return res(
-      ctx.status(200),
-      ctx.json({
-        loggedUser
-      })
-    )
+    let session = sessionStorage.getItem("sessions-" + sessionId);
 
-
+    if (session) {
+      let loggedUser = JSON.parse(sessionStorage.getItem(email));
+      return res(
+        ctx.status(200),
+        ctx.json({
+          loggedUser,
+        })
+      );
+    }
+    
+    return res(ctx.status(401))
   }),
 
-  //Update 
+  //Update
   rest.put("/api/user/:email", (req, res, ctx) => {
     const { username, newEmail, password, image } = req.body;
 
@@ -65,14 +84,14 @@ export default [
       username: username,
       email: newEmail,
       password: password,
-      image: image
-    }
+      image: image,
+    };
 
     const { email } = req.params;
-    sessionStorage.removeItem(email);
+    let registeredEmail = sessionStorage.key(email);
+
+    sessionStorage.removeItem(registeredEmail);
     sessionStorage.setItem(newEmail, JSON.stringify(newUser));
-    return res(ctx.status(201))
-
-
+    return res(ctx.status(201));
   }),
 ];

@@ -60,13 +60,15 @@ export default {
       Axios.post("/api/login", {
         email: this.email,
         password: this.password,
-      }).then((response) => {
-        if (response.data.errMsg) {
-          this.err_msg = response.data.errMsg;
-        } else {
+      })
+        .then(() => {
           this.$router.push("/profile/" + this.email);
-        }
-      });
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            this.err_msg = "E-mail y/o contraseña incorrectos";
+          }
+        });
     },
   },
 };

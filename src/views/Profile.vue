@@ -1,5 +1,5 @@
 <template>
-  <particles-bg type="lines" :bg="true" />
+  <particles-bg type="lines" :bg="true" :canvas="canvasStyle" />
   <nav id="nav" class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <h3>Challenge</h3>
@@ -32,7 +32,7 @@
             </div>
           </div>
           <div v-else>
-            <Form @submit="signup" :validation-schema="schema">
+            <Form @submit="editProfile" :validation-schema="schema">
               <h5>Edita tu perfil aquí</h5>
               <div class="row g-2">
                 <div class="col-md">
@@ -46,7 +46,6 @@
                     />
                     <label for="username">Nombre y apellido </label>
                   </div>
-
                   <ErrorMessage class="errMsg" name="username" />
                 </div>
                 <div class="col-md">
@@ -73,6 +72,7 @@
                       class="form-control"
                       type="password"
                       placeholder="Contraseña"
+                      required
                     />
                     <label for="password">Contraseña</label>
                   </div>
@@ -88,6 +88,7 @@
                 placeholder="Foto de perfil"
                 @change="obtainImage"
               />
+
               <div class="buttonWrap mt-3">
                 <button
                   type="button"
@@ -140,17 +141,24 @@ export default {
       editPassword: "",
       editEmail: "",
       showImage: "",
+      canvasStyle: {
+        height: "calc(100vh + 50px);",
+      },
     };
   },
   methods: {
     logout() {
-      this.$router.push("/");
+      Axios.post("/api/logout").then((response) => {
+        if (!response.data.error) {
+          this.$router.push("/");
+        }
+      });
     },
     editProfile(values) {
       Axios.put("/api/user/" + values.email, {
-        username: values.editUsername,
-        password: values.editPassword,
-        newEmail: values.editEmail,
+        username: values.username,
+        password: values.password,
+        newEmail: values.email,
         image: this.showImage,
       }).then((response) => {
         if (!response.data.error) {
@@ -222,7 +230,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80%;
   padding: 50px;
   border-radius: 20px;
   border: 1px solid #ccc;
@@ -241,12 +248,13 @@ export default {
 }
 
 .img {
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.file{
+.file {
   width: 100%;
 }
 
