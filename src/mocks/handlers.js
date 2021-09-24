@@ -2,7 +2,7 @@ import { rest } from "msw";
 
 import { uuid } from "uuidv4";
 
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 
 export default [
   //Signup
@@ -11,7 +11,7 @@ export default [
     const { username, email, password, image } = req.body;
 
     let salt = bcrypt.genSaltSync(10);
-    let hash = bcrypt.hashSync(password, salt)
+    let hash = bcrypt.hashSync(password, salt);
 
     const users = {
       id: uuid(),
@@ -24,11 +24,8 @@ export default [
     sessionStorage.setItem(`users-${email}`, JSON.stringify(users));
     let sessionId = uuid();
     sessionStorage.setItem("sessions-" + sessionId, email);
-    
-    return res(
-      ctx.status(201),
-      ctx.cookie("sessionId", sessionId),
-    );
+
+    return res(ctx.status(201), ctx.cookie("sessionId", sessionId));
   }),
 
   //Login
@@ -37,20 +34,12 @@ export default [
 
     let loginUser = JSON.parse(sessionStorage.getItem(`users-${email}`));
 
-    if (loginUser != null ) {
-      bcrypt.compare(password, loginUser.password, (err, response) => {
-        if(err){
-          console.log(err)
-        }
-        if(response){
-          let sessionId = uuid();
-          sessionStorage.setItem("sessions-" + sessionId, email);
-          return res(ctx.status(200), ctx.cookie("sessionId", sessionId));
-        }
-        return res(ctx.status(401))
-      })
+    if ( loginUser !== null && bcrypt.compareSync(password, loginUser.password)) {
+      let sessionId = uuid();
+      sessionStorage.setItem("sessions-" + sessionId, email);
+      return res(ctx.status(200), ctx.cookie("sessionId", sessionId));
     }
-    return res(ctx.status(404));
+    return res(ctx.status(401));
   }),
 
   //Logout
@@ -83,8 +72,8 @@ export default [
         })
       );
     }
-    
-    return res(ctx.status(401))
+
+    return res(ctx.status(401));
   }),
 
   //Update
