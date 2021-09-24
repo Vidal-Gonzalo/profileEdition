@@ -159,6 +159,7 @@ export default {
         username: values.username,
         password: values.password,
         newEmail: values.email,
+        oldEmail: this.email,
         image: this.showImage,
       }).then((response) => {
         if (!response.data.error) {

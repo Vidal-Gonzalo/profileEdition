@@ -2,29 +2,32 @@ import { rest } from "msw";
 
 import { uuid } from "uuidv4";
 
+import bcrypt from "bcryptjs"
+
 export default [
   //Signup
 
   rest.post("/api/signup", (req, res, ctx) => {
     const { username, email, password, image } = req.body;
 
+    let salt = bcrypt.genSaltSync(10);
+    let hash = bcrypt.hashSync(password, salt)
+
     const users = {
       id: uuid(),
       username: username,
       email: email,
-      password: password,
+      password: hash,
       image: image,
     };
-    sessionStorage.setItem(`${email}`, JSON.stringify(users));
+
+    sessionStorage.setItem(`users-${email}`, JSON.stringify(users));
     let sessionId = uuid();
     sessionStorage.setItem("sessions-" + sessionId, email);
     
     return res(
       ctx.status(201),
       ctx.cookie("sessionId", sessionId),
-      ctx.json({
-        email,
-      })
     );
   }),
 
@@ -32,13 +35,22 @@ export default [
   rest.post("/api/login", (req, res, ctx) => {
     const { email, password } = req.body;
 
-    let loginUser = JSON.parse(sessionStorage.getItem(email));
-    if (loginUser != null && loginUser.password === password) {
-      let sessionId = uuid();
-      sessionStorage.setItem("sessions-" + sessionId, email);
-      return res(ctx.status(200), ctx.cookie("sessionId", sessionId));
+    let loginUser = JSON.parse(sessionStorage.getItem(`users-${email}`));
+
+    if (loginUser != null ) {
+      bcrypt.compare(password, loginUser.password, (err, response) => {
+        if(err){
+          console.log(err)
+        }
+        if(response){
+          let sessionId = uuid();
+          sessionStorage.setItem("sessions-" + sessionId, email);
+          return res(ctx.status(200), ctx.cookie("sessionId", sessionId));
+        }
+        return res(ctx.status(401))
+      })
     }
-    return res(ctx.status(401));
+    return res(ctx.status(404));
   }),
 
   //Logout
@@ -63,7 +75,7 @@ export default [
     let session = sessionStorage.getItem("sessions-" + sessionId);
 
     if (session) {
-      let loggedUser = JSON.parse(sessionStorage.getItem(email));
+      let loggedUser = JSON.parse(sessionStorage.getItem(`users-${email}`));
       return res(
         ctx.status(200),
         ctx.json({
@@ -77,7 +89,7 @@ export default [
 
   //Update
   rest.put("/api/user/:email", (req, res, ctx) => {
-    const { username, newEmail, password, image } = req.body;
+    const { username, newEmail, oldEmail, password, image } = req.body;
 
     const newUser = {
       id: uuid(),
@@ -87,11 +99,8 @@ export default [
       image: image,
     };
 
-    const { email } = req.params;
-    let registeredEmail = sessionStorage.key(email);
-
-    sessionStorage.removeItem(registeredEmail);
-    sessionStorage.setItem(newEmail, JSON.stringify(newUser));
+    sessionStorage.removeItem(`users-${oldEmail}`);
+    sessionStorage.setItem(`users-${newEmail}`, JSON.stringify(newUser));
     return res(ctx.status(201));
   }),
 ];
