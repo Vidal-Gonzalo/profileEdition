@@ -1,0 +1,27 @@
+{
+    "Home": {
+        "title": "Enter to our platform!",
+        "emailLabel": "E-mail",
+        "passwordLabel": "Password",
+        "login": "Login",
+        "signup": "Haven't you registered yet? ¡Signup here!"
+    },
+    "Profile": {
+        "logout": "Logout",
+        "editButton": "Edit",
+        "editTitle": "Edit your profile here",
+        "usernameLabel": "First and last name",
+        "emailLabel": "E-mail",
+        "passwordLabel": "Password",
+        "confirmButton": "Confirm changes",
+        "cancelButton": "Cancel"
+    },
+    "Signup": {
+        "title": "¡Signup here!",
+        "usernameLabel": "First and last name",
+        "emailLabel": "E-mail",
+        "profilePicLabel": "Profile picture",
+        "passwordLabel": "Password",
+        "registerButton": "Signup"
+    }
+}

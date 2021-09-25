@@ -137,10 +137,12 @@ export default {
       user: "",
       userImage: "",
       edit: false,
-      editUsername: "",
-      editPassword: "",
-      editEmail: "",
-      showImage: "",
+      userEdit: {
+        editUsername: "",
+        editPassword: "",
+        editEmail: "",
+        showImage: "",
+      },
       canvasStyle: {
         height: "calc(100vh + 50px);",
       },
@@ -160,7 +162,7 @@ export default {
         password: values.password,
         newEmail: values.email,
         oldEmail: this.email,
-        image: this.showImage,
+        image: this.userEdit.showImage,
       }).then((response) => {
         if (!response.data.error) {
           this.logout();
@@ -177,7 +179,7 @@ export default {
       let reader = new FileReader();
 
       reader.onload = (e) => {
-        this.showImage = e.target.result;
+        this.userEdit.showImage = e.target.result;
       };
 
       reader.readAsDataURL(file);

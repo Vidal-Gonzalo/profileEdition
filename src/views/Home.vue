@@ -2,35 +2,42 @@
   <particles-bg type="polygon" :bg="true" />
   <div class="login" id="login">
     <div class="loginWrap">
+      <div class="wrapLang mb-3">
+        <select class="lang" name="language" @change="onChange($event)" v-model="language">
+          <option value="es">ES</option>
+          <option value="en">EN</option>
+        </select>
+      </div>
+
       <form v-on:submit.prevent="login">
-        <h5>¡Entra a nuestra plataforma!</h5>
-        <label for="">Nombre de usuario o e-mail</label>
+        <h5>{{ translate.Home.title }}</h5>
+        <label for=""> {{ translate.Home.emailLabel }} </label>
         <input
           class="form-control my-3"
           type="text"
           name="email"
           id="email"
-          v-model="email"
+          v-model="user.email"
           required
         />
-        <label for="">Contraseña</label>
+        <label for="">{{ translate.Home.passwordLabel }}</label>
         <input
           class="form-control my-3"
           type="password"
           name="password"
           id="password"
-          v-model="password"
+          v-model="user.password"
           required
         />
 
         <p class="errMsg">{{ err_msg }}</p>
         <div class="buttonWrap d-flex justify-content-end">
-          <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+          <button class="btn btn-primary" type="submit">
+            {{ translate.Home.login }}
+          </button>
         </div>
         <br />
-        <router-link to="/signup"
-          >¿Todavía no te registraste? Regístrate aquí</router-link
-        >
+        <router-link to="/signup">{{ translate.Home.signup }}</router-link>
       </form>
     </div>
   </div>
@@ -48,9 +55,12 @@ export default {
   },
   data: function () {
     return {
+      user: {
+        email: "",
+        password: "",
+      },
+      language: "es",
       translate: "",
-      email: "",
-      password: "",
       err_msg: "",
       message: "",
     };
@@ -58,11 +68,11 @@ export default {
   methods: {
     login() {
       Axios.post("/api/login", {
-        email: this.email,
-        password: this.password,
+        email: this.user.email,
+        password: this.user.password,
       })
         .then(() => {
-          this.$router.push("/profile/" + this.email);
+          this.$router.push("/profile/" + this.user.email);
         })
         .catch((error) => {
           if (error.response.status === 401) {
@@ -70,6 +80,37 @@ export default {
           }
         });
     },
+    onChange(event) {
+      this.language = event.target.value;
+      switch (this.language) {
+        case "en":
+          fetch("assets/en_US.json")
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              this.translate = data;
+            });
+          break;
+        default:
+          fetch("assets/es_AR.json")
+            .then(function (response) {
+              return response.json();
+            })
+            .then((data) => {
+              this.translate = data;
+            });
+      }
+    },
+  },
+  created() {
+    fetch("assets/es_AR.json")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        this.translate = data;
+      });
   },
 };
 </script>
@@ -82,6 +123,12 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+.lang{
+  border: 1px solid #017bab;
+  background: #252323;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fff;
 }
 .loginWrap {
   width: 400px;

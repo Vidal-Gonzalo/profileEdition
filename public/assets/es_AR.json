@@ -1,0 +1,27 @@
+{
+    "Home": {
+        "title": "¡Entra a nuestra plataforma!",
+        "emailLabel": "E-mail",
+        "passwordLabel": "Contraseña",
+        "login": "Iniciar sesión",
+        "signup": "¿Todavía no te registraste? ¡Regístrate aquí!"
+    },
+    "Profile": {
+        "logout": "Salir",
+        "editButton": "Editar",
+        "editTitle": "Edita tu perfil aquí",
+        "usernameLabel": "Nombre y apellido",
+        "emailLabel": "E-mail",
+        "passwordLabel": "Contraseña",
+        "confirmButton": "Confirmar cambios",
+        "cancelButton": "Cancelar"
+    },
+    "Signup": {
+        "title": "¡Regístrate aquí!",
+        "usernameLabel": "Nombre y apellido",
+        "emailLabel": "E-mail",
+        "profilePicLabel": "Foto de perfil",
+        "passwordLabel": "Contraseña",
+        "registerButton": "Registrarse"
+    }
+}

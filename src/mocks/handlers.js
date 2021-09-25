@@ -80,11 +80,14 @@ export default [
   rest.put("/api/user/:email", (req, res, ctx) => {
     const { username, newEmail, oldEmail, password, image } = req.body;
 
+    let salt = bcrypt.genSaltSync(10);
+    let hash = bcrypt.hashSync(password, salt);
+
     const newUser = {
       id: uuid(),
       username: username,
       email: newEmail,
-      password: password,
+      password: hash,
       image: image,
     };
 

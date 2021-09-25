@@ -32,7 +32,7 @@
         />
         <div v-if="image">
           <figure>
-            <img width="200" height="200" :src="showImage" />
+            <img width="200" height="200" :src="user.showImage" />
           </figure>
         </div>
         <br />
@@ -79,11 +79,13 @@ export default {
 
   data: function () {
     return {
-      username: "",
-      password: "",
-      email: "",
-      image: null,
-      showImage: "",
+      user: {
+        username: "",
+        password: "",
+        email: "",
+        image: null,
+        showImage: "",
+      },
       button: false,
     };
   },
@@ -98,7 +100,7 @@ export default {
       let reader = new FileReader();
 
       reader.onload = (e) => {
-        this.showImage = e.target.result;
+        this.user.showImage = e.target.result;
       };
 
       reader.readAsDataURL(file);
@@ -109,7 +111,7 @@ export default {
         username: values.username,
         password: values.password,
         email: values.email,
-        image: this.showImage,
+        image: this.user.showImage,
       }).then((response) => {
         if (response.data.error) {
           alert(response.data.error);
@@ -121,7 +123,7 @@ export default {
   },
   computed: {
     img() {
-      return this.image;
+      return this.user.image;
     },
   },
 };
