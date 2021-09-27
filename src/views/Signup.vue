@@ -80,9 +80,6 @@ export default {
   data: function () {
     return {
       user: {
-        username: "",
-        password: "",
-        email: "",
         image: null,
         showImage: "",
       },

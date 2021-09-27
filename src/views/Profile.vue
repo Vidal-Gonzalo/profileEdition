@@ -3,12 +3,30 @@
   <nav id="nav" class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <h3>Challenge</h3>
-      <button @click="logout" class="btn btn-danger">Salir</button>
+
+      <button @click="logout" class="btn btn-danger">
+        {{ lang.translate.buttons.logout }}
+      </button>
     </div>
   </nav>
   <section id="profile">
     <div class="container profile">
-      <div class="profileWrap">
+      <div v-if="loading" class="loading">{{ lang.translate.loading }}</div>
+
+      <div v-if="error" class="error">{{ error }}</div>
+
+      <div v-if="profile" class="profileWrap">
+        <div class="wrapLang mb-3">
+          <select class="lang" name="language" @change="onChange($event)">
+            <option
+              v-for="option in lang.available"
+              :key="option"
+              :value="option"
+            >
+              {{ option }}
+            </option>
+          </select>
+        </div>
         <div
           class="row"
           :class="{ edit: true }"
@@ -27,13 +45,13 @@
             <p>{{ item.email }}</p>
             <div class="buttonWrap">
               <button @click="edit = !edit" class="btn btn-primary">
-                Editar
+                {{ lang.translate.buttons.edit }}
               </button>
             </div>
           </div>
           <div v-else>
             <Form @submit="editProfile" :validation-schema="schema">
-              <h5>Edita tu perfil aquí</h5>
+              <h5>{{ lang.translate.titles.title }}</h5>
               <div class="row g-2">
                 <div class="col-md">
                   <div class="form-floating">
@@ -44,7 +62,9 @@
                       type="username"
                       placeholder="Nombre de usuario"
                     />
-                    <label for="username">Nombre y apellido </label>
+                    <label for="username">
+                      {{ lang.translate.labels.username }}
+                    </label>
                   </div>
                   <ErrorMessage class="errMsg" name="username" />
                 </div>
@@ -57,7 +77,7 @@
                       type="email"
                       placeholder="E-mail"
                     />
-                    <label for="email">E-mail</label>
+                    <label for="email">{{ lang.translate.labels.email }}</label>
                   </div>
 
                   <ErrorMessage class="errMsg" name="email" />
@@ -74,7 +94,9 @@
                       placeholder="Contraseña"
                       required
                     />
-                    <label for="password">Contraseña</label>
+                    <label for="password">{{
+                      lang.translate.labels.password
+                    }}</label>
                   </div>
 
                   <ErrorMessage class="errMsg" name="password" />
@@ -95,10 +117,10 @@
                   @click="edit = !edit"
                   class="btn btn-danger me-3"
                 >
-                  Cancelar
+                  {{ lang.translate.buttons.cancel }}
                 </button>
                 <button type="submit" class="btn btn-primary">
-                  Confirmar cambios
+                  {{ lang.translate.buttons.confirm }}
                 </button>
               </div>
             </Form>
@@ -134,13 +156,19 @@ export default {
   },
   data() {
     return {
+      loading: false,
+      error: null,
+      profile: null,
+      lang: {
+        applied: null,
+        selected: "English",
+        available: ["English", "Español"],
+        translate: "",
+      },
       user: "",
       userImage: "",
       edit: false,
       userEdit: {
-        editUsername: "",
-        editPassword: "",
-        editEmail: "",
         showImage: "",
       },
       canvasStyle: {
@@ -149,6 +177,12 @@ export default {
     };
   },
   methods: {
+    onChange(event) {
+      this.lang.selected = event.target.value;
+      Axios.get("assets/" + this.lang.selected + ".json").then((response) => {
+        this.lang.translate = response.data.Profile;
+      });
+    },
     logout() {
       Axios.post("/api/logout").then((response) => {
         if (!response.data.error) {
@@ -186,6 +220,9 @@ export default {
     },
   },
   created() {
+    this.loading = true;
+
+    //Get user info
     this.email = this.$route.params.email;
     Axios.get("/api/user/" + this.email).then((response) => {
       if (response.data.error) {
@@ -194,6 +231,21 @@ export default {
         this.user = response.data;
       }
     });
+    //Get translations
+    if (!this.lang.applied) {
+      Axios.get("assets/" + this.lang.selected + ".json")
+        .then((response) => {
+          this.lang.translate = response.data.Profile;
+          this.lang.applied = this.lang.selected;
+          this.loading = false;
+        })
+        .then(() => {
+          this.profile = true;
+        })
+        .catch((err) => {
+          this.error = err.toString();
+        });
+    }
   },
   computed: {
     img() {
@@ -218,9 +270,22 @@ export default {
 }
 
 #nav button {
-  width: 60px;
-  height: 40px;
+  margin-left: 10px;
+  font-size: 13px;
   text-align: center;
+}
+
+.wrapLang {
+  display: flex;
+  justify-content: start;
+}
+
+.lang {
+  height: 20%;
+  border: 1px solid #017bab;
+  background: #252323;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fff;
 }
 
 .profile {
@@ -230,9 +295,6 @@ export default {
 }
 
 .profileWrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 50px;
   border-radius: 20px;
   border: 1px solid #ccc;

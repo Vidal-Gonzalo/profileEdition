@@ -1,0 +1,47 @@
+{
+    "Home": {
+        "language": "Select your language",
+        "loading": "Loading...",
+        "titles": {
+            "title": "Enter to our platform!"
+        },
+        "labels": {
+            "email": "E-mail",
+            "password": "Password"
+        },
+        "buttons": {
+            "login": "Login",
+            "signup": "Haven't you registered yet? Signup here!"
+        }
+    },
+    "Profile": {
+        "titles": {
+            "title": "Edit your profile here"
+        },
+        "labels": {
+            "username": "First and last name",
+            "email": "E-mail",
+            "password": "Password"
+        },
+        "buttons": {
+            "logout": "Logout",
+            "confirm": "Confirm changes",
+            "cancel": "Cancel",
+            "edit": "Edit"
+        }
+    },
+    "Signup": {
+        "titles": {
+            "title": "¡Signup here!"
+        },
+        "labels": {
+            "username": "First and last name",
+            "email": "E-mail",
+            "profilePic": "Profile picture",
+            "password": "Password"
+        },
+        "buttons": {
+            "register": "Signup"
+        }
+    }
+}

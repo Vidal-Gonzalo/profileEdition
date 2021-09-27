@@ -1,17 +1,26 @@
 <template>
   <particles-bg type="polygon" :bg="true" />
   <div class="login" id="login">
-    <div class="loginWrap">
+    <div v-if="loading" class="loading">{{lang.translate.loading}}</div>
+
+    <div v-if="error" class="error">{{ error }}</div>
+
+    <div v-if="form" class="loginWrap">
       <div class="wrapLang mb-3">
-        <select class="lang" name="language" @change="onChange($event)" v-model="language">
-          <option value="es">ES</option>
-          <option value="en">EN</option>
+        <select class="lang" name="language" @change="onChange($event)">
+          <option
+            v-for="option in lang.available"
+            :key="option"
+            :value="option"
+          >
+            {{option}}
+          </option>
         </select>
       </div>
 
       <form v-on:submit.prevent="login">
-        <h5>{{ translate.Home.title }}</h5>
-        <label for=""> {{ translate.Home.emailLabel }} </label>
+        <h5>{{ lang.translate.titles.title }}</h5>
+        <label for=""> {{ lang.translate.labels.email }} </label>
         <input
           class="form-control my-3"
           type="text"
@@ -20,7 +29,7 @@
           v-model="user.email"
           required
         />
-        <label for="">{{ translate.Home.passwordLabel }}</label>
+        <label for=""> {{ lang.translate.labels.password }} </label>
         <input
           class="form-control my-3"
           type="password"
@@ -32,12 +41,10 @@
 
         <p class="errMsg">{{ err_msg }}</p>
         <div class="buttonWrap d-flex justify-content-end">
-          <button class="btn btn-primary" type="submit">
-            {{ translate.Home.login }}
-          </button>
+          <button class="btn btn-primary" type="submit"> {{ lang.translate.buttons.login }} </button>
         </div>
         <br />
-        <router-link to="/signup">{{ translate.Home.signup }}</router-link>
+        <router-link to="/signup"> {{ lang.translate.buttons.signup }} </router-link>
       </form>
     </div>
   </div>
@@ -55,15 +62,39 @@ export default {
   },
   data: function () {
     return {
+      loading: false,
+      error: null,
+      form: null,
+      lang: {
+        applied: null,
+        selected: "English",
+        available: ["English", "Español"],
+        translate: "",
+      },
       user: {
         email: "",
         password: "",
       },
-      language: "es",
-      translate: "",
       err_msg: "",
-      message: "",
     };
+  },
+  created() {
+    this.loading = true;
+
+    if (!this.lang.applied) {
+      Axios.get("assets/" + this.lang.selected + ".json")
+        .then((response) => {
+          this.lang.translate = response.data.Home;
+          this.lang.applied = this.lang.selected;
+          this.loading = false;
+        })
+        .then(() => {
+          this.form = true;
+        })
+        .catch((err) => {
+          this.error = err.toString();
+        });
+    }
   },
   methods: {
     login() {
@@ -81,36 +112,11 @@ export default {
         });
     },
     onChange(event) {
-      this.language = event.target.value;
-      switch (this.language) {
-        case "en":
-          fetch("assets/en_US.json")
-            .then((response) => {
-              return response.json();
-            })
-            .then((data) => {
-              this.translate = data;
-            });
-          break;
-        default:
-          fetch("assets/es_AR.json")
-            .then(function (response) {
-              return response.json();
-            })
-            .then((data) => {
-              this.translate = data;
-            });
-      }
-    },
-  },
-  created() {
-    fetch("assets/es_AR.json")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        this.translate = data;
+      this.lang.selected = event.target.value;
+      Axios.get("assets/" + this.lang.selected + ".json").then((response) => {
+        this.lang.translate = response.data.Home;
       });
+    },
   },
 };
 </script>
@@ -118,13 +124,16 @@ export default {
 
 
 <style scoped>
+
 .login {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
-.lang{
+.lang {
+  width: 50%;
+  height: 20%;
   border: 1px solid #017bab;
   background: #252323;
   font-family: Arial, Helvetica, sans-serif;
