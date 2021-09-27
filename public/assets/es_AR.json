@@ -1,13 +1,14 @@
 {
     "Home": {
-        "language": "Elige tu lenguaje",
-        "loading": "Cargando...",
         "titles": {
             "title": "¡Entra a nuestra plataforma!"
         },
         "labels": {
             "email": "E-mail",
             "password": "Contraseña"
+        },
+        "validations": {
+            "error": "E-mail y/o contraseña incorrectos"
         },
         "buttons": {
             "login": "Iniciar sesión",
@@ -22,6 +23,11 @@
             "username": "Nombre y apellido",
             "email": "E-mail",
             "password": "Contraseña"
+        }, 
+        "validations": {
+            "username": "Ingrese un nombre y apellido válido",
+            "password": "Ingrese una contraseña válida de mínimo ocho (8) caracteres",
+            "email": "Ingrese un e-mail válido"
         },
         "buttons": {
             "logout": "Salir",
@@ -35,13 +41,18 @@
             "title": "¡Regístrate aquí!"
         },
         "labels": {
-            "usernameLabel": "Nombre y apellido",
-            "emailLabel": "E-mail",
-            "profilePicLabel": "Foto de perfil",
-            "passwordLabel": "Contraseña"
+            "username": "Nombre y apellido",
+            "email": "E-mail",
+            "profilePic": "Foto de perfil",
+            "password": "Contraseña"
+        }, 
+        "validations": {
+            "username": "Ingrese un nombre y apellido válido",
+            "password": "Ingrese una contraseña válida de mínimo ocho (8) caracteres",
+            "email": "Ingrese un e-mail válido"
         },
         "buttons": {
-            "registerButton": "Registrarse"
+            "register": "Registrarse"
         }
     }
 }

@@ -1,13 +1,14 @@
 {
     "Home": {
-        "language": "Select your language",
-        "loading": "Loading...",
         "titles": {
             "title": "Enter to our platform!"
-        },
+        }, 
         "labels": {
             "email": "E-mail",
             "password": "Password"
+        },
+        "validations": {
+            "error": "Invalid e-mail or password"
         },
         "buttons": {
             "login": "Login",
@@ -23,6 +24,11 @@
             "email": "E-mail",
             "password": "Password"
         },
+        "validations": {
+            "username": "Please enter your first and last name",
+            "password": "Please use at least eight (8) characters",
+            "email": "Invalid email adress"
+        },
         "buttons": {
             "logout": "Logout",
             "confirm": "Confirm changes",
@@ -32,13 +38,18 @@
     },
     "Signup": {
         "titles": {
-            "title": "¡Signup here!"
+            "title": "Signup here!"
         },
         "labels": {
             "username": "First and last name",
             "email": "E-mail",
             "profilePic": "Profile picture",
             "password": "Password"
+        },
+        "validations": {
+            "username": "Please enter your first and last name",
+            "password": "Please use at least eight (8) characters",
+            "email": "Invalid email adress"
         },
         "buttons": {
             "register": "Signup"
