@@ -41,7 +41,7 @@ import Axios from "axios";
 import { ParticlesBg } from "particles-bg-vue";
 
 export default {
-  name: "login",
+  name: "Login",
   components: {
     ParticlesBg,
   },

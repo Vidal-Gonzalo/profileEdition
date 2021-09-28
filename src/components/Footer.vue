@@ -29,7 +29,7 @@ export default {
     return {
       lang: {
         applied: null,
-        selected: "",
+        selected: null,
         default: "en_US",
         available: [
           { key: "en_US", value: "English" },
@@ -40,24 +40,26 @@ export default {
   },
   methods: {
     fetchTranslations() {
-      if (this.lang.selected === this.lang.applied) {
-        return;
+      if (this.lang.selected === this.lang.applied && this.lang.applied !== null) {
+        return 
       }
 
-      if (this.lang.selected === "" && !localStorage.selectedLanguage) {
-        this.lang.selected = this.lang.default;
-      } else if (this.lang.selected === "") {
-        this.lang.selected = localStorage.getItem("selectedLanguage");
-      }
-
-      this.lang.applied = this.lang.selected;
-
-      localStorage.setItem("selectedLanguage", this.lang.applied);
+      this.lang.applied = this.lang.selected = this.resolveLang()
 
       Axios.get("assets/" + this.lang.applied + ".json").then((response) => {
         this.$emit("g11n", response.data);
       });
     },
+    resolveLang(){
+        if (this.lang.selected !== null) {
+            return this.lang.selected
+        }
+        if (localStorage.selectedLanguage){
+            return localStorage.getItem("selectedLanguage")
+        }
+        localStorage.setItem("selectedLanguage", this.lang.default)
+        return this.lang.default
+    }
   },
 
   created() {

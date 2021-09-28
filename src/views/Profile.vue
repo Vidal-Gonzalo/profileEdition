@@ -3,8 +3,7 @@
   <div v-if="translations">
     <nav id="nav" class="navbar navbar-expand-lg">
       <div class="container-fluid">
-        <h3>Challenge</h3>
-
+        <h3>Vue Challenge</h3>
         <button @click="logout" class="btn btn-danger">
           {{ translations.buttons.logout }}
         </button>
@@ -22,7 +21,7 @@
             <div v-if="!edit">
               <div class="img">
                 <img
-                  v-bind:src="`${item.image}`"
+                  v-bind:src="item.image"
                   class="profileImage"
                   width="200"
                 />
@@ -46,7 +45,7 @@
                         class="form-control"
                         name="username"
                         type="username"
-                        placeholder="Nombre de usuario"
+                        placeholder=this.translations.labels.username
                       />
                       <label for="username">
                         {{ translations.labels.username }}
@@ -63,7 +62,7 @@
                         name="email"
                         class="form-control"
                         type="email"
-                        placeholder="E-mail"
+                        placeholder=this.translations.labels.username
                       />
                       <label for="email">{{ translations.labels.email }}</label>
                       <ErrorMessage class="errMsg" as="p" name="email">
@@ -80,7 +79,7 @@
                         name="password"
                         class="form-control"
                         type="password"
-                        placeholder="Contraseña"
+                        placeholder=this.translations.labels.username
                         required
                       />
                       <label for="password">{{
@@ -98,7 +97,6 @@
                   type="file"
                   name="picture"
                   id="picture"
-                  placeholder="Foto de perfil"
                   @change="obtainImage"
                 />
 
@@ -236,19 +234,6 @@ export default {
   margin-left: 10px;
   font-size: 13px;
   text-align: center;
-}
-
-.wrapLang {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.lang {
-  height: 20%;
-  border: 1px solid #017bab;
-  background: #252323;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #fff;
 }
 
 .profile {

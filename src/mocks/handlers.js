@@ -23,7 +23,7 @@ export default [
 
     sessionStorage.setItem(`users-${email}`, JSON.stringify(users));
     let sessionId = uuid();
-    sessionStorage.setItem("sessions-" + sessionId, email);
+    sessionStorage.setItem(`sessions-${sessionId}`, email);
 
     return res(ctx.status(201), ctx.cookie("sessionId", sessionId));
   }),
@@ -34,9 +34,12 @@ export default [
 
     let loginUser = JSON.parse(sessionStorage.getItem(`users-${email}`));
 
-    if ( loginUser !== null && bcrypt.compareSync(password, loginUser.password)) {
+    if (
+      loginUser !== null &&
+      bcrypt.compareSync(password, loginUser.password)
+    ) {
       let sessionId = uuid();
-      sessionStorage.setItem("sessions-" + sessionId, email);
+      sessionStorage.setItem(`sessions-${sessionId}`, email);
       return res(ctx.status(200), ctx.cookie("sessionId", sessionId));
     }
     return res(ctx.status(401));
@@ -46,10 +49,10 @@ export default [
   rest.post("/api/logout", (req, res, ctx) => {
     const { sessionId } = req.cookies;
 
-    let session = sessionStorage.getItem("sessions-" + sessionId);
+    let session = sessionStorage.getItem(`sessions-${sessionId}`);
 
     if (session) {
-      sessionStorage.setItem("sessions-" + sessionId, "");
+      sessionStorage.setItem(`sessions-${sessionId}`, "");
       return res(ctx.status(200));
     }
 
@@ -61,7 +64,7 @@ export default [
     const { email } = req.params;
     const { sessionId } = req.cookies;
 
-    let session = sessionStorage.getItem("sessions-" + sessionId);
+    let session = sessionStorage.getItem(`sessions-${sessionId}`);
 
     if (session) {
       let loggedUser = JSON.parse(sessionStorage.getItem(`users-${email}`));

@@ -12,7 +12,7 @@
                 class="form-control"
                 name="username"
                 type="username"
-                placeholder="Nombre de usuario"
+                placeholder=this.translations.labels.username
               />
               <label for="username">{{translations.labels.username}}</label>
               <ErrorMessage class="errMsg" as="p" name="username">
@@ -27,7 +27,7 @@
                 name="email"
                 class="form-control"
                 type="email"
-                placeholder="email"
+                placeholder=this.translations.labels.email
                 label="error"
                 :rules="validateEmail"
               />
@@ -67,7 +67,7 @@
                 name="password"
                 class="form-control"
                 type="password"
-                placeholder="password"
+                placeholder=this.translations.labels.password
               />
 
               <label for="password">{{translations.labels.password}}</label>
@@ -104,8 +104,8 @@ export default {
   setup() { 
     const schema = Yup.object().shape({
       username: Yup.string().min(5).required().label(),
-      email: Yup.string().email().required().label("Email Address"),
-      password: Yup.string().min(5).required().label("Your Password"),
+      email: Yup.string().email().required().label(),
+      password: Yup.string().min(5).required().label(),
     });
     return { schema };
   },
